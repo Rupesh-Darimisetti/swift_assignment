@@ -9,12 +9,20 @@ const Pagination = ({ totalRows, rowsPerPage, setRowsPerPage, setCurrentPage, cu
     useEffect(() => {
         const savedPage = localStorage.getItem("currentPage")
         const savedRange = localStorage.getItem("currentRange")
-        const page = savedPage ? parseInt(savedPage) : 1;
+        var page = savedPage ? parseInt(savedPage) : 1;
         const range = savedRange
         setCurrentPage(page)
         setRowsPerPage(range)
         setCurrentIndex(page)
-    }, []);
+    }, [setCurrentPage, setRowsPerPage]);
+
+    useEffect(() => {
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
+        }
+    }, [setCurrentPage, currentPage, rowsPerPage, totalRows]);
+
 
     // on current page change: save to local storage to save index of pagination
     useEffect(() => {
@@ -25,8 +33,8 @@ const Pagination = ({ totalRows, rowsPerPage, setRowsPerPage, setCurrentPage, cu
     }, [currentPage])
 
     const getVisiblePages = () => {
-        const maxButtons = 3;
-        let startPage = Math.max(1, currentIndex - 3);
+        const maxButtons = 1;
+        let startPage = Math.max(1, currentIndex - 1);
         let endPage = Math.min(totalPages, startPage + maxButtons);
 
         if (endPage - startPage < maxButtons - 1) {
@@ -94,7 +102,7 @@ const Pagination = ({ totalRows, rowsPerPage, setRowsPerPage, setCurrentPage, cu
                 onChange={handleRowsPerPageChange}
                 className="px-2 py-1 border rounded ml-2"
             >
-                {[5, 10, 20, 50, 100].map((value) => (
+                {[10, 50, 100].map((value) => (
                     <option key={value} value={value}>
                         {value} / Page
                     </option>
