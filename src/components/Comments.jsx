@@ -1,10 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-
 import TablePagination from '@mui/material/TablePagination';
-
-
+import { useEffect, useMemo, useState } from "react";
 
 const Commments = () => {
     const [comments, setComments] = useState([])
@@ -19,7 +15,6 @@ const Commments = () => {
             if (response.ok === true) {
                 const data = await response.json()
                 setComments(data)
-                console.log(comments)
             } else {
                 console.log("Unable to fetch comments")
             }
@@ -34,6 +29,7 @@ const Commments = () => {
 
 
     const handleChangePage = (event, newPage) => {
+        event.preventDefault()
         setPage(newPage);
     };
     const handleClick = (event, id) => {
@@ -91,7 +87,7 @@ const Commments = () => {
                                 <TableCell >{each.id}</TableCell >
                                 <TableCell >{each.name}</TableCell >
                                 <TableCell >{each.email}</TableCell >
-                                <TableCell >{each.body}</TableCell >
+                                <TableCell className="w-[15px] overflow-hidden whitespace-nowrap text-overflow-ellipsis">{each.body}</TableCell >
                             </TableRow>
                             );
                         })}
