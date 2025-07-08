@@ -1,12 +1,12 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import TablePagination from '@mui/material/TablePagination';
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import Pagination from "../common/Pagination";
 
 const Commments = () => {
     const [comments, setComments] = useState([])
-    const [selected, setSelected] = useState([]);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    // const [selected, setSelected] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const getComments = async () => {
         const COMMENT_URL = "https://jsonplaceholder.typicode.com/comments"
@@ -28,38 +28,10 @@ const Commments = () => {
     })
 
 
-    const handleChangePage = (event, newPage) => {
-        event.preventDefault()
-        setPage(newPage);
-    };
-    const handleClick = (event, id) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
+    const lastPostIndex = currentPage * rowsPerPage;
+    const firstPostIndex = lastPostIndex - rowsPerPage;
+    const currentPosts = comments.slice(firstPostIndex, lastPostIndex);
 
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-        setSelected(newSelected);
-    };
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-    const visibleRows = useMemo(
-        () =>
-            [...comments]
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-        [page, rowsPerPage, comments],
-    );
     return (
         <>
             <TableContainer border="1" cellPadding="10" cellSpacing="0">
@@ -73,17 +45,8 @@ const Commments = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {visibleRows.map((each, index) => {
-                            const isItemSelected = selected.includes(comments.id);
-                            // const labelId = `enhanced-table-checkbox-${index}`;
-                            return (<TableRow hover
-                                onClick={(event) => handleClick(event, comments.id)}
-                                role="checkbox"
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                selected={isItemSelected}
-                                sx={{ cursor: 'pointer' }}
-                                key={each.id}>
+                        {currentPosts.map((each, index) => {
+                            return (<TableRow key={each.id}>
                                 <TableCell >{each.id}</TableCell >
                                 <TableCell >{each.name}</TableCell >
                                 <TableCell >{each.email}</TableCell >
@@ -94,14 +57,12 @@ const Commments = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[5, 10]}
-                component="div"
-                count={comments.length}
+            <Pagination
+                totalRows={comments.length}
                 rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+                setRowsPerPage={setRowsPerPage}
             />
         </>
     )
