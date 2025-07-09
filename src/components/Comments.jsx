@@ -22,11 +22,7 @@ const Commments = () => {
 
     const filteredSortedComments = useMemo(() => {
         let filtered = comments?.filter((item) => {
-            const postId = 12345670 + item?.id + item?.postId
-            // const postId = item?.postId < 10 ? `00${item?.postId}` :
-            //     item?.postId > 9 && item?.postId < 100 ?
-            //         `0${item?.postId}` : item?.postId
-            return [postId.toString(), item?.name, item.email].some((field) =>
+            return [item?.postId.toString(), item?.name, item.email].some((field) =>
                 field.toLowerCase().includes(searchTerm.toLowerCase())
             )
         }
@@ -68,8 +64,8 @@ const Commments = () => {
     }
 
     return (
-        <div className="m-3">
-            <div className="flex gap-2 m-2 p-2 justify-evenly">
+        <div className="box-content m:0 p-2">
+            <div className="flex  justify-evenly p-2">
 
                 {["postId", "name", "email", "body"]?.map((field) => (
                     <button key={field} className="border-b-gray-400 rounded">
@@ -84,7 +80,7 @@ const Commments = () => {
                         )}
                     </button>
                 ))}
-                <button className="md:w-1/3 p-3 border rounded-md w-full flex gap-3">
+                <button className="md:w-1/3 p-3 border rounded-md w-full flex gap-3 md:px-16">
                     <svg className="style_icon__KAdjP" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"></path></svg>
                     <input
                         type="text"
@@ -96,7 +92,7 @@ const Commments = () => {
                 </button>
             </div >
 
-            <TableContainer border="1" cellPadding="2" cellSpacing="0" className="hidden md:block border">
+            <TableContainer border="1" cellPadding="2" cellSpacing="0" className="hidden md:block md:border md:px-16">
                 <Table>
                     <TableHead className="bg-gray-200 border-full">
                         <TableRow>

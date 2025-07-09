@@ -1,4 +1,3 @@
-
 const NameLogo = ({ name }) => {
     return (
         <div>
